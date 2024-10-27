@@ -5,7 +5,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 dotenv.config({ path: `.env.local` })
 
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 const SERVER_PORT = parseInt(process.env.PUBLIC_SERVER_PORT || '4000')
 const SERVER_HOST = process.env.PUBLIC_SERVER_HOST
@@ -29,5 +29,15 @@ export default defineConfig({
   },
   plugins: [
     sveltekit()
-  ]
+  ],
+	test: {
+		globals: true,
+		environment: 'jsdom'
+	},
+	// Tell Vitest to use the `browser` entry points in `package.json` files, even though it's running in Node
+	resolve: process.env.VITEST
+		? {
+				conditions: ['browser']
+			}
+		: undefined
 });
